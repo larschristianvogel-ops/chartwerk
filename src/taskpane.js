@@ -891,6 +891,13 @@
     $('#live').addEventListener('change', function (e) { S.live = e.target.checked; if (S.live && S.bound) schedulePush(); });
     $('#btnApply').addEventListener('click', function () { if (S.bound) { clearTimeout(pushTimer); push(); } else insertNew(); });
     $('#btnCopy').addEventListener('click', function () { insertNew(); });
+    $('#btnDiag').addEventListener('click', async function () {
+      const pre = $('#diag');
+      pre.hidden = false;
+      pre.textContent = '…';
+      try { pre.textContent = JSON.stringify(await CW.ppt.diagnoseSelection(), null, 1); }
+      catch (e) { pre.textContent = 'Fehler: ' + errText(e); }
+    });
     $('#btnUnbind').addEventListener('click', function () {
       S.ignoreId = S.bound ? S.bound.chartId : null;
       S.bound = null; S.selIsChart = false;

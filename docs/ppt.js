@@ -275,6 +275,7 @@
     }
     const container = group || frameShape;
     const gbox = box(container);
+    CW.ppt._last = { frame: [frame.left, frame.top, frame.width, frame.height].map(r1), gboxAtCreate: [gbox.left, gbox.top, gbox.width, gbox.height].map(r1), frameShape: [frameShape.left, frameShape.top, frameShape.width, frameShape.height].map(r1) };
     container.tags.add(TAG_GEOM, geomTag(frame, gbox));
     if (group) frameShape.tags.add(TAG_GEOM, geomTag(frame, gbox));
     await ctx.sync();
@@ -452,10 +453,48 @@
     return PowerPoint.run(async function (ctx) { return themeColors(ctx, await currentSlide(ctx)); });
   }
 
+  /** Diagnose: Werte der Auswahl so, wie PowerPoint sie meldet. */
+  async function diagnoseSelection() {
+    return PowerPoint.run(async function (ctx) {
+      const out = { caps: caps() };
+      try { const ps = ctx.presentation.pageSetup; ps.load('slideWidth,slideHeight'); await ctx.sync(); out.page = [ps.slideWidth, ps.slideHeight]; } catch (e) { out.page = 'n/a'; }
+      const shapes = ctx.presentation.getSelectedShapes();
+      shapes.load('items/id,items/name,items/type,items/left,items/top,items/width,items/height');
+      await ctx.sync();
+      out.sel = [];
+      for (let i = 0; i < Math.min(2, shapes.items.length); i++) {
+        const s = shapes.items[i];
+        const d = { id: s.id, name: s.name, type: s.type, box: [s.left, s.top, s.width, s.height].map(r1) };
+        const t = s.tags; t.load('items/key,items/value'); await ctx.sync();
+        d.tags = {};
+        t.items.forEach(function (x) { if (!/^CHARTWERK_\d+$/.test(x.key)) d.tags[x.key] = x.value; });
+        if (s.type === 'Group' && caps().group) {
+          try {
+            const kids = s.group.shapes;
+            kids.load('items/name,items/type,items/left,items/top,items/width,items/height');
+            await ctx.sync();
+            d.kids = kids.items.length;
+            const fr = kids.items.find(function (k) { return /^Chartwerk Rahmen/.test(k.name || ''); });
+            d.frameRect = fr ? [fr.left, fr.top, fr.width, fr.height].map(r1) : null;
+            let l = Infinity, tp = Infinity, r = -Infinity, b = -Infinity;
+            kids.items.forEach(function (k) { l = Math.min(l, k.left); tp = Math.min(tp, k.top); r = Math.max(r, k.left + k.width); b = Math.max(b, k.top + k.height); });
+            d.kidsBox = [l, tp, r - l, b - tp].map(r1);
+            d.outliers = kids.items.filter(function (k) {
+              return fr && (k.left < fr.left - 0.5 || k.top < fr.top - 0.5 || k.left + k.width > fr.left + fr.width + 0.5 || k.top + k.height > fr.top + fr.height + 0.5);
+            }).slice(0, 8).map(function (k) { return k.name + ' ' + [k.left, k.top, k.width, k.height].map(r1).join('/'); });
+          } catch (e) { d.kidsErr = String(e.message || e); }
+        }
+        out.sel.push(d);
+      }
+      out.lastRender = CW.ppt._last || null;
+      return out;
+    });
+  }
+
   CW.ppt = {
     caps: caps, available: available, insertChart: insertChart, getSelectedChart: getSelectedChart,
     peekSelection: peekSelection, updateChart: updateChart, refreshSelected: refreshSelected,
-    toggleDecoration: toggleDecoration, currentThemeColors: currentThemeColors,
+    toggleDecoration: toggleDecoration, currentThemeColors: currentThemeColors, diagnoseSelection: diagnoseSelection,
     _addPrim: addPrim, _readSpec: readSpec, _tagMap: tagMap,
   };
 })(typeof self !== 'undefined' ? self : this);

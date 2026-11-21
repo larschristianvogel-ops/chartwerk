@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chartwerk</title>
   <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-  <link rel="stylesheet" href="taskpane.css?v=00c40d78">
+  <link rel="stylesheet" href="taskpane.css?v=241941b7">
 </head>
 <body>
   <header class="top">
@@ -68,6 +68,8 @@
         <p><b>Größe:</b> Diagramm einfach größer ziehen, Chartwerk ordnet Beschriftungen und Pfeile danach neu an.</p>
         <p><b>Tastatur:</b> Pfeiltasten, Enter, Tab wie in Excel. <kbd>F2</kbd> oder Doppelklick bearbeitet eine Zelle, <kbd>⇧</kbd>+Pfeile markieren mehrere Zellen.</p>
         <p class="muted small" id="versionInfo"></p>
+        <p><button type="button" id="btnDiag" class="secondary">Auswahl analysieren</button></p>
+        <pre id="diag" class="diag" hidden></pre>
       </div>
     </details>
   </main>
@@ -83,9 +85,9 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <input type="file" id="file" accept=".xlsx,.xlsm,.xls,.csv,.tsv,.txt" hidden>
 
-  <script src="engine.js?v=00c40d78"></script>
-  <script src="icons.js?v=00c40d78"></script>
-  <script src="ppt.js?v=00c40d78"></script>
-  <script src="taskpane.js?v=00c40d78"></script>
+  <script src="engine.js?v=241941b7"></script>
+  <script src="icons.js?v=241941b7"></script>
+  <script src="ppt.js?v=241941b7"></script>
+  <script src="taskpane.js?v=241941b7"></script>
 </body>
 </html>
