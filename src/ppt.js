@@ -209,6 +209,8 @@
     return { w: 960, h: 540, exact: false };
   }
 
+  const CONTENT_PH = /^(inhaltsplatzhalter|content placeholder|platzhalter für inhalt|textplatzhalter|text placeholder|diagrammplatzhalter|chart placeholder)/i;
+
   async function defaultFrame(ctx, slide) {
     const size = await slideSize(ctx, slide);
     const W = size.w, H = size.h;
@@ -217,6 +219,20 @@
       const sc = slide.shapes;
       sc.load('items/name,items/type,items/left,items/top,items/width,items/height');
       await ctx.sync();
+      // Leerer Inhaltsplatzhalter: Diagramm übernimmt genau dessen Fläche (wie beim Einfügen eines PowerPoint-Diagramms).
+      const ph = sc.items.find(function (s) { return CONTENT_PH.test(s.name || '') && s.width > W * 0.3 && s.height > H * 0.25; });
+      if (ph) {
+        let empty = /diagramm|chart/i.test(ph.name || '');
+        if (!empty) {
+          try { const tr = ph.textFrame.textRange; tr.load('text'); await ctx.sync(); empty = !String(tr.text || '').trim(); } catch (e) { empty = false; }
+        }
+        if (empty) {
+          const pf = box(ph);
+          ph.delete();
+          await ctx.sync();
+          return pf;
+        }
+      }
       const title = sc.items.find(function (s) {
         return /^(title|titel|überschrift|ueberschrift)/i.test(s.name || '') && s.top < H * 0.4 && s.width > W * 0.4;
       });

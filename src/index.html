@@ -20,11 +20,14 @@
   <p><a class="btn" href="manifest.xml" download>manifest.xml herunterladen</a></p>
   <h2>Installation auf dem Mac</h2>
   <ol>
-    <li>PowerPoint beenden.</li>
-    <li>Im Terminal (Manifest liegt in „Downloads“):
+    <li>PowerPoint komplett beenden (⌘Q).</li>
+    <li>Im Terminal:
       <pre>mkdir -p ~/Library/Containers/com.microsoft.Powerpoint/Data/Documents/wef
-cp ~/Downloads/manifest.xml ~/Library/Containers/com.microsoft.Powerpoint/Data/Documents/wef/chartwerk.xml</pre></li>
-    <li>PowerPoint öffnen, eine Präsentation öffnen. Der Reiter <b>Chartwerk</b> erscheint im Menüband. Falls nicht: Einfügen &gt; Add-Ins &gt; Meine Add-Ins &gt; Chartwerk.</li>
+curl -fsSL https://larschristianvogel-ops.github.io/chartwerk/manifest.xml \
+  -o ~/Library/Containers/com.microsoft.Powerpoint/Data/Documents/wef/chartwerk.xml</pre></li>
+    <li>PowerPoint öffnen, eine Präsentation öffnen.</li>
+    <li>Einmalig: <b>Start &gt; Add-Ins</b>, unter „Entwicklertool-Add-Ins“ auf <b>Chartwerk</b> klicken. Danach ist der Reiter <b>Chartwerk</b> dauerhaft da.</li>
   </ol>
+  <p><img src="vorschau.png" alt="Beispiele aller Diagrammtypen" style="max-width:100%;border-radius:8px;border:1px solid #e3e7ec"></p>
 </body>
 </html>

@@ -31,8 +31,9 @@ Office-Add-ins laden ihre Oberfläche immer über HTTPS. Deshalb liegen die Date
      -o ~/Library/Containers/com.microsoft.Powerpoint/Data/Documents/wef/chartwerk.xml
    ```
 
-3. **PowerPoint öffnen**, eine Präsentation öffnen: Der Reiter **Chartwerk** erscheint im Menüband.
-   Falls nicht: *Einfügen > Add-Ins > Meine Add-Ins*, dort unter „Entwickler-Add-Ins“ Chartwerk wählen.
+3. **PowerPoint neu starten** (komplett beenden mit ⌘Q), eine Präsentation öffnen.
+4. **Einmalig aktivieren:** Reiter *Start > Add-Ins*, unter „Entwicklertool-Add-Ins“ auf **Chartwerk** klicken.
+   Danach steht der Reiter **Chartwerk** dauerhaft im Menüband.
 
 Voraussetzung: PowerPoint für Mac aus Microsoft 365, mindestens Version 16.62. Gruppieren der Diagramme
 ab 16.96, Foliengröße und Vorlagenfarben ab 16.105 (ältere Versionen nutzen Ersatzlösungen).
@@ -48,6 +49,12 @@ ab 16.96, Foliengröße und Vorlagenfarben ab 16.105 (ältere Versionen nutzen E
 | Pfeile | Im Datenblatt unter „Pfeile“ (Von/Bis wählbar) oder im Menüband CAGR / Differenz / Niveau (ein- und ausschalten) |
 | Wasserfall | Erste Spalte = Startwert, Veränderungen positiv oder negativ, `e` = Summe |
 | Größe | Diagramm ziehen; ohne offenes Datenblatt danach *Neu anordnen* klicken |
+
+## Updates
+
+Neue Versionen landen per `git push` automatisch auf GitHub Pages. PowerPoint hält Dateien bis zu
+10 Minuten im Zwischenspeicher; danach (oder nach einem Neustart von PowerPoint) ist die neue Version aktiv.
+Das Manifest muss dafür nicht neu installiert werden.
 
 ## Grenzen
 

@@ -197,7 +197,17 @@ async function commandsRun(browser) {
     check(c.length === 1 && c[0].type === 'Group', 'Menüband: ' + t + ' eingefügt');
     await slidePng(page, 'cmd-' + t.toLowerCase(), '257#');
   }
-  // CAGR an/aus auf ausgewähltem Liniendiagramm (zuletzt eingefügt = Mekko -> nicht unterstützt)
+  // Leerer Inhaltsplatzhalter wird durch das Diagramm ersetzt
+  await page.evaluate(() => { window.__mock.selection = { slideId: '258#', shapeIds: [] }; });
+  await call('cwInsertStacked');
+  const s3 = await page.evaluate(() => window.__mock.slides[2].shapes.map((s) => ({ name: s.name, type: s.type, l: s.left, t: s.top, w: s.width, h: s.height })));
+  const grp = s3.find((x) => x.type === 'Group');
+  check(!s3.some((x) => /Inhaltsplatzhalter/.test(x.name)) && grp && Math.abs(grp.l - 66) < 1 && Math.abs(grp.t - 144) < 1 && Math.abs(grp.w - 828) < 1,
+    'Leerer Inhaltsplatzhalter: Diagramm übernimmt dessen Fläche (' + (grp ? [grp.l, grp.t, grp.w, grp.h].map((v) => v.toFixed(0)).join('/') : '-') + ')');
+  await slidePng(page, 'cmd-placeholder', '258#');
+  await page.evaluate(() => { window.__mock.slides[1].shapes = []; window.__mock.selection = { slideId: '257#', shapeIds: [] }; });
+  await call('cwInsertMekko');
+  // CAGR auf Mekko -> nicht unterstützt
   await call('cwToggleCagr');
   let log = await page.evaluate(() => window.__mock.log.filter((l) => l[0] === 'dialog').map((l) => l[1]));
   check(log.some((m) => /Mekko/.test(m)), 'Hinweis, wenn Pfeil für den Typ nicht geht');

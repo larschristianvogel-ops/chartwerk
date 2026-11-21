@@ -14,6 +14,10 @@
         { id: '2', name: 'Titel 1', type: 'Placeholder', left: 40, top: 30, width: 880, height: 60, tags: {}, text: 'Umsatzentwicklung' },
       ], layoutShapes: [{ left: 40, width: 880 }] },
       { id: '257#', shapes: [], layoutShapes: [{ left: 40, width: 880 }] },
+      { id: '258#', shapes: [
+        { id: '4', name: 'Titel 1', type: 'Placeholder', left: 66, top: 29, width: 828, height: 104, tags: {}, text: 'Umsatz nach Produkten', tf: { autoSize: 'AutoSizeNone', wrap: true, margins: [7, 7, 3, 3], valign: 'Middle', size: 32, color: '#000000', bold: false, halign: 'Left' } },
+        { id: '5', name: 'Inhaltsplatzhalter 2', type: 'Placeholder', left: 66, top: 144, width: 828, height: 343, tags: {}, text: '', tf: { autoSize: 'AutoSizeNone', wrap: true, margins: [7, 7, 3, 3], valign: 'Top', size: 18, color: '#000000', bold: false, halign: 'Left' } },
+      ], layoutShapes: [{ left: 66, width: 828 }] },
     ],
     selection: { slideId: '256#', shapeIds: [] },
     handlers: [],
@@ -260,7 +264,8 @@
     Object.defineProperty(font, 'bold', { set(v) { T().bold = !!v; } });
     Object.defineProperty(para, 'horizontalAlignment', { set(v) { if (!['Left', 'Center', 'Right'].includes(v)) throw err('bad halign ' + v); T().halign = v; } });
     tr.font = font; tr.paragraphFormat = para;
-    Object.defineProperty(tr, 'text', { set(v) { T(); m.text = String(v); } });
+    Object.defineProperty(tr, 'text', { set(v) { T(); m.text = String(v); }, get() { if (!tr._loaded) throw err('PropertyNotLoaded: text'); return m.text || ''; } });
+    tr.load = function () { T(); const proxy = base(ctx, [], {}); proxy._commitHook = () => { tr._loaded = true; }; return tr; };
     tf.textRange = tr;
     Object.defineProperty(tf, 'autoSizeSetting', { set(v) { if (!['AutoSizeNone', 'AutoSizeTextToFitShape', 'AutoSizeShapeToFitText'].includes(v)) throw err('bad autosize ' + v); T().autoSize = v; } });
     Object.defineProperty(tf, 'wordWrap', { set(v) { T().wrap = !!v; } });
