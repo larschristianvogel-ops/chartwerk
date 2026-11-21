@@ -5,7 +5,7 @@
 
   const TAG_SPEC = 'CHARTWERK';        // Anzahl der Datenteile
   const TAG_ID = 'CHARTWERK_ID';       // Diagramm-ID (an jeder Form)
-  const TAG_SIZE = 'CHARTWERK_SIZE';   // Größe beim letzten Layout ("B x H")
+  const TAG_GEOM = 'CHARTWERK_GEOM';   // Rahmen und Gruppengröße beim letzten Layout
   const CHUNK = 900;
   const VALIGN = { t: 'Top', m: 'Middle', b: 'Bottom' };
   const HALIGN = { l: 'Left', c: 'Center', r: 'Right' };
@@ -27,18 +27,43 @@
   function marker(id) { return '[' + id + ']'; }
   function chartName(spec, id) { return 'Chartwerk ' + ((CW.TYPES[spec.type] || {}).label || 'Diagramm') + ' ' + marker(id); }
   function box(s) { return { left: s.left, top: s.top, width: s.width, height: s.height }; }
-  function sizeTag(f) { return f.width.toFixed(1) + 'x' + f.height.toFixed(1); }
+  /* PowerPoint ersetzt 0 in Positions-/Größenangaben beim Anlegen durch Standardwerte (72 pt). */
+  const EPS = 0.05;
+  function nz(v) { return Math.abs(v) < EPS ? EPS : v; }
+  function r1(v) { return Math.round(v * 10) / 10; }
+  function geomTag(frame, gbox) {
+    return JSON.stringify({ f: [r1(frame.left), r1(frame.top), r1(frame.width), r1(frame.height)], g: [r1(gbox.left), r1(gbox.top), r1(gbox.width), r1(gbox.height)] });
+  }
+  function readGeom(map) {
+    try {
+      const o = JSON.parse(map[TAG_GEOM] || 'null');
+      if (!o || !Array.isArray(o.f) || !Array.isArray(o.g) || !(o.g[2] > 0) || !(o.g[3] > 0)) return null;
+      return o;
+    } catch (e) { return null; }
+  }
+  /** Rahmen des Diagramms aus der aktuellen Gruppengröße (verschoben oder skaliert vom Nutzer). */
+  function frameFor(geom, cur) {
+    if (!geom) return { left: cur.left, top: cur.top, width: cur.width, height: cur.height };
+    const sx = cur.width / geom.g[2], sy = cur.height / geom.g[3];
+    return {
+      left: cur.left + (geom.f[0] - geom.g[0]) * sx, top: cur.top + (geom.f[1] - geom.g[1]) * sy,
+      width: geom.f[2] * sx, height: geom.f[3] * sy,
+    };
+  }
+  function isResized(geom, cur) {
+    if (!geom) return false;
+    return Math.abs(cur.width - geom.g[2]) > 0.6 || Math.abs(cur.height - geom.g[3]) > 0.6;
+  }
 
   function tagMap(items) {
     const m = {};
     (items || []).forEach(function (t) { m[String(t.key).toUpperCase()] = t.value; });
     return m;
   }
-  function writeSpecTags(shape, json, frame, chartId) {
+  function writeSpecTags(shape, json, chartId) {
     const parts = [];
     for (let i = 0; i < json.length; i += CHUNK) parts.push(json.slice(i, i + CHUNK));
     shape.tags.add(TAG_ID, chartId);
-    shape.tags.add(TAG_SIZE, sizeTag(frame));
     shape.tags.add(TAG_SPEC, String(parts.length));
     parts.forEach(function (p, i) { shape.tags.add(TAG_SPEC + '_' + i, p); });
   }
@@ -52,16 +77,11 @@
     }
     try { return CW.normalizeSpec(JSON.parse(json)); } catch (e) { return null; }
   }
-  function isStale(map, frame) {
-    const m = String(map[TAG_SIZE] || '').match(/^([\d.]+)x([\d.]+)$/);
-    if (!m) return false;
-    return Math.abs(+m[1] - frame.width) > 0.6 || Math.abs(+m[2] - frame.height) > 0.6;
-  }
 
   /* ---------------- Formen anlegen ---------------- */
 
   function shapeBox(p) {
-    return { left: p.x, top: p.y, width: Math.max(p.w, 0.5), height: Math.max(p.h, 0.5) };
+    return { left: nz(p.x), top: nz(p.y), width: Math.max(p.w, 0.5), height: Math.max(p.h, 0.5) };
   }
   function styleText(tf, p) {
     tf.autoSizeSetting = 'AutoSizeNone';
@@ -113,7 +133,7 @@
       case 'line': {
         const dx = p.x2 - p.x1, dy = p.y2 - p.y1;
         if (Math.abs(dx) < 0.01 && Math.abs(dy) < 0.01) return null;
-        const b = { left: Math.min(p.x1, p.x2), top: Math.min(p.y1, p.y2), width: Math.abs(dx), height: Math.abs(dy) };
+        const b = { left: nz(Math.min(p.x1, p.x2)), top: nz(Math.min(p.y1, p.y2)), width: nz(Math.abs(dx)), height: nz(Math.abs(dy)) };
         // Von links unten nach rechts oben gibt es nur als Form "LineInverse".
         s = (dx * dy < 0) ? shapes.addGeometricShape('LineInverse', b) : shapes.addLine('Straight', b);
         s.lineFormat.visible = true;
@@ -235,7 +255,8 @@
       created.push(s);
     });
     created.forEach(function (s) { if (s !== frameShape) s.tags.add(TAG_ID, chartId); s.load('id'); });
-    writeSpecTags(frameShape, json, frame, chartId);
+    writeSpecTags(frameShape, json, chartId);
+    frameShape.load('left,top,width,height');
     await ctx.sync();
 
     const ids = created.map(function (s) { return s.id; });
@@ -244,20 +265,25 @@
       try {
         const g = shapes.addGroup(ids);
         g.name = chartName(res.spec, chartId);
-        writeSpecTags(g, json, frame, chartId);
-        g.load('id');
+        writeSpecTags(g, json, chartId);
+        g.load('id,left,top,width,height');
         await ctx.sync();
         group = g;
       } catch (e) {
         console.warn('Chartwerk: Gruppieren nicht möglich', e);
       }
     }
+    const container = group || frameShape;
+    const gbox = box(container);
+    container.tags.add(TAG_GEOM, geomTag(frame, gbox));
+    if (group) frameShape.tags.add(TAG_GEOM, geomTag(frame, gbox));
+    await ctx.sync();
     if (cp.sel) {
       try { slide.setSelectedShapes(group ? [group.id] : ids); await ctx.sync(); } catch (e) { /* Auswahl ist optional */ }
     }
     return {
-      chartId: chartId, slideId: slide.id, shapeId: group ? group.id : frameShape.id,
-      grouped: !!group, frame: frame, warnings: res.warnings, spec: res.spec,
+      chartId: chartId, slideId: slide.id, shapeId: container.id,
+      grouped: !!group, frame: frame, box: gbox, warnings: res.warnings, spec: res.spec,
     };
   }
 
@@ -285,7 +311,8 @@
     tags.load('items/key,items/value');
     await ctx.sync();
     const map = tagMap(tags.items);
-    return { slide: slide, container: cont, members: members, spec: readSpec(map), frame: box(cont), stale: isStale(map, box(cont)) };
+    const geom = readGeom(map), cur = box(cont);
+    return { slide: slide, container: cont, members: members, spec: readSpec(map), frame: frameFor(geom, cur), box: cur, stale: isResized(geom, cur) };
   }
 
   async function candidateSlides(ctx, slideId) {
@@ -332,14 +359,15 @@
         const spec = readSpec(map);
         if (spec && map[TAG_ID]) {
           const s = shapes.items[k];
-          return { chartId: map[TAG_ID], slideId: slide.id, shapeId: s.id, spec: spec, frame: box(s), stale: isStale(map, box(s)) };
+          const geom = readGeom(map), cur = box(s);
+          return { chartId: map[TAG_ID], slideId: slide.id, shapeId: s.id, spec: spec, frame: frameFor(geom, cur), box: cur, stale: isResized(geom, cur) };
         }
       }
       for (let k = 0; k < shapes.items.length; k++) {
         const id = tagMap(tagSets[k].items)[TAG_ID];
         if (!id) continue;
         const loc = await locateOnSlide(ctx, slide, id, null);
-        if (loc && loc.spec) return { chartId: id, slideId: slide.id, shapeId: loc.container.id, spec: loc.spec, frame: loc.frame, stale: loc.stale };
+        if (loc && loc.spec) return { chartId: id, slideId: slide.id, shapeId: loc.container.id, spec: loc.spec, frame: loc.frame, box: loc.box, stale: loc.stale };
       }
       return null;
     });

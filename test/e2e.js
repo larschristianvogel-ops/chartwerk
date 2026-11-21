@@ -71,6 +71,15 @@ async function paneRun(browser, version) {
     check(c.length > 20 && c.every((s) => s.type !== 'Group'), 'Diagramm ungruppiert eingefügt (' + c.length + ' Formen)');
   }
   await slidePng(page, 'slide-insert-' + tag);
+  if (grouped) {
+    const before = await charts(page);
+    await page.evaluate((id) => window.__mock.select('256#', [id]), before[0].id);
+    await sleep(4000);
+    const after = await charts(page);
+    check(after.length === 1 && after[0].id === before[0].id && Math.abs(after[0].h - before[0].h) < 0.5,
+      'Keine Neuanordnungs-Schleife bei ausgewähltem Diagramm (' + before[0].h.toFixed(1) + ' → ' + (after[0] ? after[0].h.toFixed(1) : '-') + ' pt)');
+  }
+  check(!(await page.evaluate(() => window.__mock.zeroDefaults)), 'Keine Größe 0 an PowerPoint übergeben');
 
   // 2) Excel-Tabelle ins Eckfeld einfügen (Live-Aktualisierung)
   const tsv = '\t2019\t2020\t2021\t2022\t2023\t2024E\nFirmenkunden\t120\t130\t128\t140\t155\t170\nPrivatkunden\t80\t82\t85\t90\t96\t101\nKapitalmarkt\t"1.040,5"\t35\t52\t48\t50\t55\n';
@@ -143,8 +152,10 @@ async function paneRun(browser, version) {
       await page.evaluate((id) => window.__mock.resizeGroup(id, 520, 300), first.id);
       await sleep(3600);
       c = await charts(page);
-      const resized = c.find((s) => Math.abs(s.w - 520) < 1 && Math.abs(s.h - 300) < 1);
-      check(!!resized && resized.tags.CHARTWERK_SIZE === '520.0x300.0', 'Nach Größenänderung neu angeordnet (520 × 300)');
+      const resized = c.find((s) => Math.abs(s.w - 520) < 1.5 && Math.abs(s.h - 300) < 1.5);
+      const geom = resized ? JSON.parse(resized.tags.CHARTWERK_GEOM || 'null') : null;
+      check(!!resized && geom && Math.abs(geom.f[2] - 520) < 1.5 && Math.abs(geom.f[3] - 300) < 1.5,
+        'Nach Größenänderung neu angeordnet (' + c.map((s) => s.w.toFixed(0) + '×' + s.h.toFixed(0)).join(', ') + ')');
       await slidePng(page, 'slide-resized-' + tag);
     } else {
       // ungruppiert: ein Kindelement auswählen

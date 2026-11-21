@@ -202,9 +202,25 @@ async function icons() {
   }
 }
 
+/* Versionsanhang an lokale Skripte/Styles, damit Office nach einem Update keine alten Dateien aus dem Cache nimmt. */
+function bustCache() {
+  const crypto = require('crypto');
+  const h = crypto.createHash('sha1');
+  for (const f of ['engine.js', 'ppt.js', 'icons.js', 'taskpane.js', 'taskpane.css', 'commands.js']) h.update(fs.readFileSync(path.join(SRC, f)));
+  const v = h.digest('hex').slice(0, 8);
+  for (const f of fs.readdirSync(DIST).filter((x) => x.endsWith('.html'))) {
+    const file = path.join(DIST, f);
+    const html = fs.readFileSync(file, 'utf8').replace(/(src|href)="((?:engine|ppt|icons|taskpane|commands)\.(?:js|css))"/g, '$1="$2?v=' + v + '"');
+    fs.writeFileSync(file, html);
+  }
+  return v;
+}
+
 (async () => {
   fs.rmSync(DIST, { recursive: true, force: true });
   copyDir(SRC, DIST);
+  const v = bustCache();
+  console.log('Build ' + v);
   await icons();
   fs.writeFileSync(path.join(DIST, 'manifest.xml'), manifest());
   fs.writeFileSync(path.join(DIST, '.nojekyll'), '');

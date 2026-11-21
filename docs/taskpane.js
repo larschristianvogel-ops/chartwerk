@@ -746,7 +746,17 @@
   /* PowerPoint                                                        */
   /* ================================================================ */
 
-  function refOf(r) { return { chartId: r.chartId, slideId: r.slideId, shapeId: r.shapeId, frame: r.frame }; }
+  function refOf(r) { return { chartId: r.chartId, slideId: r.slideId, shapeId: r.shapeId, frame: r.frame, box: r.box || r.frame }; }
+
+  /* Schutz gegen Endlosschleifen: höchstens 3 automatische Neuanordnungen pro 20 Sekunden. */
+  const autoLog = [];
+  function autoAllowed() {
+    const now = Date.now();
+    while (autoLog.length && now - autoLog[0] > 20000) autoLog.shift();
+    if (autoLog.length >= 3) return false;
+    autoLog.push(now);
+    return true;
+  }
 
   function schedulePush() {
     clearTimeout(pushTimer);
@@ -802,16 +812,18 @@
     let sel = null;
     try { sel = await CW.ppt.getSelectedChart(); } catch (e) { return; }
     S.selIsChart = !!sel;
-    if (!sel) return;
+    if (!sel) { S.ignoreId = null; return; }
+    if (S.ignoreId && sel.chartId === S.ignoreId) return;
+    S.ignoreId = null;
     if (S.bound && sel.chartId === S.bound.chartId) {
-      S.bound.shapeId = sel.shapeId; S.bound.slideId = sel.slideId; S.bound.frame = sel.frame;
+      S.bound.shapeId = sel.shapeId; S.bound.slideId = sel.slideId; S.bound.frame = sel.frame; S.bound.box = sel.box;
     } else {
       await flushPush();
       if (S.busy) return;
       loadSpec(sel.spec, refOf(sel));
       toast('Diagramm geladen: ' + CW.TYPES[sel.spec.type].label);
     }
-    if (sel.stale) push();
+    if (sel.stale && autoAllowed()) push();
   }
 
   async function pollResize() {
@@ -819,10 +831,16 @@
     let p;
     try { p = await CW.ppt.peekSelection(); } catch (e) { return; }
     if (!p || !S.bound || p.shapeId !== S.bound.shapeId || S.busy) return;
-    const f = S.bound.frame || p.frame;
-    const resized = Math.abs(p.frame.width - f.width) > 0.6 || Math.abs(p.frame.height - f.height) > 0.6;
-    S.bound.frame = p.frame;
-    if (resized) { renderPreview(); push(); }
+    const b = S.bound.box || p.frame;
+    const resized = Math.abs(p.frame.width - b.width) > 0.6 || Math.abs(p.frame.height - b.height) > 0.6;
+    if (!resized) {
+      // nur verschoben: Rahmen mitverschieben
+      if (S.bound.frame) { S.bound.frame = Object.assign({}, S.bound.frame, { left: S.bound.frame.left + p.frame.left - b.left, top: S.bound.frame.top + p.frame.top - b.top }); }
+      S.bound.box = p.frame;
+      return;
+    }
+    if (!autoAllowed()) return;
+    push();
   }
 
   async function onOfficeReady(info) {
@@ -873,7 +891,12 @@
     $('#live').addEventListener('change', function (e) { S.live = e.target.checked; if (S.live && S.bound) schedulePush(); });
     $('#btnApply').addEventListener('click', function () { if (S.bound) { clearTimeout(pushTimer); push(); } else insertNew(); });
     $('#btnCopy').addEventListener('click', function () { insertNew(); });
-    $('#btnUnbind').addEventListener('click', function () { S.bound = null; S.selIsChart = false; renderStatus(); renderFooter(); renderPreview(); toast('Verknüpfung gelöst. „In Folie einfügen“ legt ein neues Diagramm an.'); });
+    $('#btnUnbind').addEventListener('click', function () {
+      S.ignoreId = S.bound ? S.bound.chartId : null;
+      S.bound = null; S.selIsChart = false;
+      renderStatus(); renderFooter(); renderPreview();
+      toast('Verknüpfung gelöst. „In Folie einfügen“ legt ein neues Diagramm an.');
+    });
   }
 
   function start() {

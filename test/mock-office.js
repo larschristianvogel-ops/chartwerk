@@ -161,6 +161,8 @@
       ['left', 'top', 'width', 'height'].forEach((k) => {
         if (typeof o[k] !== 'number' || !isFinite(o[k])) throw err('bad option ' + k + '=' + o[k]);
         if ((k === 'width' || k === 'height') && o[k] < 0) throw err('negative ' + k);
+        // Wie echtes PowerPoint: 0 gilt als "nicht angegeben" und wird zur Standardgröße 72 pt.
+        if (o[k] === 0) { o[k] = 72; model.zeroDefaults = (model.zeroDefaults || 0) + 1; }
       });
     };
     c.addGeometricShape = function (type, o) {
