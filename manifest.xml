@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+           xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+           xsi:type="TaskPaneApp">
+  <Id>d192b15a-e413-4298-a654-58e4352c01f5</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Chartwerk</ProviderName>
+  <DefaultLocale>de-DE</DefaultLocale>
+  <DisplayName DefaultValue="Chartwerk"/>
+  <Description DefaultValue="Diagramme im Beratungsstil: Datenblatt wie Excel, automatische CAGR- und Differenzpfeile, Wasserfall, Mekko."/>
+  <IconUrl DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/icon-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/icon-64.png"/>
+  <SupportUrl DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/"/>
+  <AppDomains>
+    <AppDomain>https://larschristianvogel-ops.github.io</AppDomain>
+  </AppDomains>
+  <Hosts>
+    <Host Name="Presentation"/>
+  </Hosts>
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/taskpane.html"/>
+  </DefaultSettings>
+  <Permissions>ReadWriteDocument</Permissions>
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Hosts>
+      <Host xsi:type="Presentation">
+        <DesktopFormFactor>
+          <GetStarted>
+            <Title resid="GetStarted.Title"/>
+            <Description resid="GetStarted.Description"/>
+            <LearnMoreUrl resid="Url.Home"/>
+          </GetStarted>
+          <FunctionFile resid="Url.Commands"/>
+          <ExtensionPoint xsi:type="PrimaryCommandSurface">
+            <CustomTab id="Chartwerk.Tab">
+              <Group id="Chartwerk.GrpInsert">
+                <Label resid="Grp.Insert"/>
+                <Icon>
+                    <bt:Image size="16" resid="Ico.Stacked.16"/>
+                    <bt:Image size="32" resid="Ico.Stacked.32"/>
+                    <bt:Image size="80" resid="Ico.Stacked.80"/>
+                  </Icon>
+                <Control xsi:type="Button" id="Chartwerk.BtnStacked">
+                  <Label resid="Lbl.Stacked"/>
+                  <Supertip>
+                    <Title resid="Lbl.Stacked"/>
+                    <Description resid="Tip.Stacked"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Ico.Stacked.16"/>
+                    <bt:Image size="32" resid="Ico.Stacked.32"/>
+                    <bt:Image size="80" resid="Ico.Stacked.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>cwInsertStacked</FunctionName>
+                  </Action>
+                </Control>
+                <Control xsi:type="Button" id="Chartwerk.BtnClustered">
+                  <Label resid="Lbl.Clustered"/>
+                  <Supertip>
+                    <Title resid="Lbl.Clustered"/>
+                    <Description resid="Tip.Clustered"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Ico.Clustered.16"/>
+                    <bt:Image size="32" resid="Ico.Clustered.32"/>
+                    <bt:Image size="80" resid="Ico.Clustered.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>cwInsertClustered</FunctionName>
+                  </Action>
+                </Control>
+                <Control xsi:type="Button" id="Chartwerk.BtnPercent">
+                  <Label resid="Lbl.Percent"/>
+                  <Supertip>
+                    <Title resid="Lbl.Percent"/>
+                    <Description resid="Tip.Percent"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Ico.Percent.16"/>
+                    <bt:Image size="32" resid="Ico.Percent.32"/>
+                    <bt:Image size="80" resid="Ico.Percent.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>cwInsertPercent</FunctionName>
+                  </Action>
+                </Control>
+                <Control xsi:type="Button" id="Chartwerk.BtnBar">
+                  <Label resid="Lbl.Bar"/>
+                  <Supertip>
+                    <Title resid="Lbl.Bar"/>
+                    <Description resid="Tip.Bar"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Ico.Bar.16"/>
+                    <bt:Image size="32" resid="Ico.Bar.32"/>
+                    <bt:Image size="80" resid="Ico.Bar.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>cwInsertBar</FunctionName>
+                  </Action>
+                </Control>
+                <Control xsi:type="Button" id="Chartwerk.BtnWaterfall">
+                  <Label resid="Lbl.Waterfall"/>
+                  <Supertip>
+                    <Title resid="Lbl.Waterfall"/>
+                    <Description resid="Tip.Waterfall"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Ico.Waterfall.16"/>
+                    <bt:Image size="32" resid="Ico.Waterfall.32"/>
+                    <bt:Image size="80" resid="Ico.Waterfall.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>cwInsertWaterfall</FunctionName>
+                  </Action>
+                </Control>
+                <Control xsi:type="Button" id="Chartwerk.BtnLine">
+                  <Label resid="Lbl.Line"/>
+                  <Supertip>
+                    <Title resid="Lbl.Line"/>
+                    <Description resid="Tip.Line"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Ico.Line.16"/>
+                    <bt:Image size="32" resid="Ico.Line.32"/>
+                    <bt:Image size="80" resid="Ico.Line.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>cwInsertLine</FunctionName>
+                  </Action>
+                </Control>
+                <Control xsi:type="Button" id="Chartwerk.BtnMekko">
+                  <Label resid="Lbl.Mekko"/>
+                  <Supertip>
+                    <Title resid="Lbl.Mekko"/>
+                    <Description resid="Tip.Mekko"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Ico.Mekko.16"/>
+                    <bt:Image size="32" resid="Ico.Mekko.32"/>
+                    <bt:Image size="80" resid="Ico.Mekko.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>cwInsertMekko</FunctionName>
+                  </Action>
+                </Control>
+              </Group>
+              <Group id="Chartwerk.GrpEdit">
+                <Label resid="Grp.Edit"/>
+                <Icon>
+                    <bt:Image size="16" resid="Ico.Sheet.16"/>
+                    <bt:Image size="32" resid="Ico.Sheet.32"/>
+                    <bt:Image size="80" resid="Ico.Sheet.80"/>
+                  </Icon>
+                <Control xsi:type="Button" id="Chartwerk.BtnSheet">
+                  <Label resid="Lbl.Sheet"/>
+                  <Supertip>
+                    <Title resid="Lbl.Sheet"/>
+                    <Description resid="Tip.Sheet"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Ico.Sheet.16"/>
+                    <bt:Image size="32" resid="Ico.Sheet.32"/>
+                    <bt:Image size="80" resid="Ico.Sheet.80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ChartwerkPane</TaskpaneId>
+                    <SourceLocation resid="Url.Taskpane"/>
+                  </Action>
+                </Control>
+                <Control xsi:type="Button" id="Chartwerk.BtnRefresh">
+                  <Label resid="Lbl.Refresh"/>
+                  <Supertip>
+                    <Title resid="Lbl.Refresh"/>
+                    <Description resid="Tip.Refresh"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Ico.Refresh.16"/>
+                    <bt:Image size="32" resid="Ico.Refresh.32"/>
+                    <bt:Image size="80" resid="Ico.Refresh.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>cwRefresh</FunctionName>
+                  </Action>
+                </Control>
+              </Group>
+              <Group id="Chartwerk.GrpArrows">
+                <Label resid="Grp.Arrows"/>
+                <Icon>
+                    <bt:Image size="16" resid="Ico.Cagr.16"/>
+                    <bt:Image size="32" resid="Ico.Cagr.32"/>
+                    <bt:Image size="80" resid="Ico.Cagr.80"/>
+                  </Icon>
+                <Control xsi:type="Button" id="Chartwerk.BtnCagr">
+                  <Label resid="Lbl.Cagr"/>
+                  <Supertip>
+                    <Title resid="Lbl.Cagr"/>
+                    <Description resid="Tip.Cagr"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Ico.Cagr.16"/>
+                    <bt:Image size="32" resid="Ico.Cagr.32"/>
+                    <bt:Image size="80" resid="Ico.Cagr.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>cwToggleCagr</FunctionName>
+                  </Action>
+                </Control>
+                <Control xsi:type="Button" id="Chartwerk.BtnDiff">
+                  <Label resid="Lbl.Diff"/>
+                  <Supertip>
+                    <Title resid="Lbl.Diff"/>
+                    <Description resid="Tip.Diff"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Ico.Diff.16"/>
+                    <bt:Image size="32" resid="Ico.Diff.32"/>
+                    <bt:Image size="80" resid="Ico.Diff.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>cwToggleDiff</FunctionName>
+                  </Action>
+                </Control>
+                <Control xsi:type="Button" id="Chartwerk.BtnLevel">
+                  <Label resid="Lbl.Level"/>
+                  <Supertip>
+                    <Title resid="Lbl.Level"/>
+                    <Description resid="Tip.Level"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Ico.Level.16"/>
+                    <bt:Image size="32" resid="Ico.Level.32"/>
+                    <bt:Image size="80" resid="Ico.Level.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>cwToggleLevel</FunctionName>
+                  </Action>
+                </Control>
+              </Group>
+              <Label resid="Tab.Label"/>
+            </CustomTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Ico.Stacked.16" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/stacked-16.png"/>
+        <bt:Image id="Ico.Stacked.32" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/stacked-32.png"/>
+        <bt:Image id="Ico.Stacked.80" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/stacked-80.png"/>
+        <bt:Image id="Ico.Clustered.16" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/clustered-16.png"/>
+        <bt:Image id="Ico.Clustered.32" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/clustered-32.png"/>
+        <bt:Image id="Ico.Clustered.80" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/clustered-80.png"/>
+        <bt:Image id="Ico.Percent.16" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/percent-16.png"/>
+        <bt:Image id="Ico.Percent.32" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/percent-32.png"/>
+        <bt:Image id="Ico.Percent.80" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/percent-80.png"/>
+        <bt:Image id="Ico.Bar.16" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/bar-16.png"/>
+        <bt:Image id="Ico.Bar.32" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/bar-32.png"/>
+        <bt:Image id="Ico.Bar.80" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/bar-80.png"/>
+        <bt:Image id="Ico.Waterfall.16" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/waterfall-16.png"/>
+        <bt:Image id="Ico.Waterfall.32" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/waterfall-32.png"/>
+        <bt:Image id="Ico.Waterfall.80" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/waterfall-80.png"/>
+        <bt:Image id="Ico.Line.16" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/line-16.png"/>
+        <bt:Image id="Ico.Line.32" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/line-32.png"/>
+        <bt:Image id="Ico.Line.80" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/line-80.png"/>
+        <bt:Image id="Ico.Mekko.16" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/mekko-16.png"/>
+        <bt:Image id="Ico.Mekko.32" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/mekko-32.png"/>
+        <bt:Image id="Ico.Mekko.80" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/mekko-80.png"/>
+        <bt:Image id="Ico.Refresh.16" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/refresh-16.png"/>
+        <bt:Image id="Ico.Refresh.32" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/refresh-32.png"/>
+        <bt:Image id="Ico.Refresh.80" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/refresh-80.png"/>
+        <bt:Image id="Ico.Cagr.16" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/cagr-16.png"/>
+        <bt:Image id="Ico.Cagr.32" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/cagr-32.png"/>
+        <bt:Image id="Ico.Cagr.80" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/cagr-80.png"/>
+        <bt:Image id="Ico.Diff.16" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/diff-16.png"/>
+        <bt:Image id="Ico.Diff.32" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/diff-32.png"/>
+        <bt:Image id="Ico.Diff.80" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/diff-80.png"/>
+        <bt:Image id="Ico.Level.16" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/level-16.png"/>
+        <bt:Image id="Ico.Level.32" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/level-32.png"/>
+        <bt:Image id="Ico.Level.80" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/level-80.png"/>
+        <bt:Image id="Ico.Sheet.16" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/sheet-16.png"/>
+        <bt:Image id="Ico.Sheet.32" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/sheet-32.png"/>
+        <bt:Image id="Ico.Sheet.80" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/sheet-80.png"/>
+        <bt:Image id="Ico.Logo.16" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/icon-16.png"/>
+        <bt:Image id="Ico.Logo.32" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/icon-32.png"/>
+        <bt:Image id="Ico.Logo.80" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/assets/icon-80.png"/>
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="Url.Taskpane" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/taskpane.html"/>
+        <bt:Url id="Url.Commands" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/commands.html"/>
+        <bt:Url id="Url.Home" DefaultValue="https://larschristianvogel-ops.github.io/chartwerk/"/>
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="Tab.Label" DefaultValue="Chartwerk"/>
+        <bt:String id="Grp.Insert" DefaultValue="Diagramm einfügen"/>
+        <bt:String id="Grp.Edit" DefaultValue="Bearbeiten"/>
+        <bt:String id="Grp.Arrows" DefaultValue="Pfeile"/>
+        <bt:String id="Lbl.Sheet" DefaultValue="Datenblatt"/>
+        <bt:String id="GetStarted.Title" DefaultValue="Chartwerk ist bereit"/>
+        <bt:String id="Lbl.Stacked" DefaultValue="Gestapelt"/>
+        <bt:String id="Lbl.Clustered" DefaultValue="Gruppiert"/>
+        <bt:String id="Lbl.Percent" DefaultValue="100 %"/>
+        <bt:String id="Lbl.Bar" DefaultValue="Balken"/>
+        <bt:String id="Lbl.Waterfall" DefaultValue="Wasserfall"/>
+        <bt:String id="Lbl.Line" DefaultValue="Linie"/>
+        <bt:String id="Lbl.Mekko" DefaultValue="Mekko"/>
+        <bt:String id="Lbl.Refresh" DefaultValue="Neu anordnen"/>
+        <bt:String id="Lbl.Cagr" DefaultValue="CAGR"/>
+        <bt:String id="Lbl.Diff" DefaultValue="Differenz"/>
+        <bt:String id="Lbl.Level" DefaultValue="Niveau"/>
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="Tip.Sheet" DefaultValue="Datenblatt öffnen: Werte wie in Excel eintragen oder per ⌘V aus Excel einfügen. Ein ausgewähltes Diagramm wird automatisch geladen."/>
+        <bt:String id="GetStarted.Description" DefaultValue="Im Reiter Chartwerk ein Diagramm einfügen und über Datenblatt die Werte ändern."/>
+        <bt:String id="Tip.Stacked" DefaultValue="Gestapelte Säulen mit Summen, Reihenbeschriftung rechts und CAGR-Pfeil. Daten danach im Datenblatt anpassen."/>
+        <bt:String id="Tip.Clustered" DefaultValue="Gruppierte Säulen für Vergleiche, zum Beispiel Plan und Ist."/>
+        <bt:String id="Tip.Percent" DefaultValue="100-%-Säulen für Anteile und Strukturen."/>
+        <bt:String id="Tip.Bar" DefaultValue="Horizontale Balken, ideal für Rankings."/>
+        <bt:String id="Tip.Waterfall" DefaultValue="Brücke vom Start- zum Endwert, etwa eine EBIT-Bridge. Ein e im Datenblatt erzeugt Summen."/>
+        <bt:String id="Tip.Line" DefaultValue="Liniendiagramm für Zeitreihen mit Beschriftung am Linienende."/>
+        <bt:String id="Tip.Mekko" DefaultValue="Marimekko: Spaltenbreite nach Größe, Segmente nach Anteil, zum Beispiel für Marktkarten."/>
+        <bt:String id="Tip.Refresh" DefaultValue="Ausgewähltes Diagramm an seine aktuelle Größe anpassen und Beschriftungen und Pfeile neu anordnen."/>
+        <bt:String id="Tip.Cagr" DefaultValue="CAGR-Pfeil von der ersten zur letzten Säule ein- oder ausblenden."/>
+        <bt:String id="Tip.Diff" DefaultValue="Differenzpfeil zwischen den letzten beiden Säulen ein- oder ausblenden (Wasserfall: Start bis Ende)."/>
+        <bt:String id="Tip.Level" DefaultValue="Niveaupfeil zwischen erster und letzter Säule ein- oder ausblenden."/>
+      </bt:LongStrings>
+    </Resources>
+  </VersionOverrides>
+</OfficeApp>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chartwerk für PowerPoint</title>
+  <style>
+    body { font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; color: #1b1f24; max-width: 720px; margin: 40px auto; padding: 0 20px; }
+    h1 { font-size: 26px; margin: 0 0 4px; display: flex; align-items: center; gap: 10px; }
+    .sub { color: #5b6470; margin: 0 0 26px; }
+    code { background: #f2f4f7; padding: 2px 5px; border-radius: 4px; font-size: 13px; }
+    pre { background: #0f1a26; color: #e6edf3; padding: 12px 14px; border-radius: 8px; overflow: auto; font-size: 12.5px; }
+    a.btn { display: inline-block; background: #1f5a96; color: #fff; text-decoration: none; padding: 8px 14px; border-radius: 7px; font-weight: 600; }
+    li { margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+  <h1><img src="assets/icon-64.png" width="34" height="34" alt=""> Chartwerk</h1>
+  <p class="sub">PowerPoint-Add-in für Diagramme im Beratungsstil: Datenblatt wie Excel, automatische CAGR- und Differenzpfeile, Wasserfall, Mekko.</p>
+  <p><a class="btn" href="manifest.xml" download>manifest.xml herunterladen</a></p>
+  <h2>Installation auf dem Mac</h2>
+  <ol>
+    <li>PowerPoint beenden.</li>
+    <li>Im Terminal (Manifest liegt in „Downloads“):
+      <pre>mkdir -p ~/Library/Containers/com.microsoft.Powerpoint/Data/Documents/wef
+cp ~/Downloads/manifest.xml ~/Library/Containers/com.microsoft.Powerpoint/Data/Documents/wef/chartwerk.xml</pre></li>
+    <li>PowerPoint öffnen, eine Präsentation öffnen. Der Reiter <b>Chartwerk</b> erscheint im Menüband. Falls nicht: Einfügen &gt; Add-Ins &gt; Meine Add-Ins &gt; Chartwerk.</li>
+  </ol>
+</body>
+</html>

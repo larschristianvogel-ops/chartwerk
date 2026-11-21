@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chartwerk</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <link rel="stylesheet" href="taskpane.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <img src="assets/icon-32.png" alt="" width="18" height="18">
+      <span>Chartwerk</span>
+    </div>
+    <div class="status" id="status"><i></i><span>Neues Diagramm</span></div>
+  </header>
+
+  <main>
+    <section class="types" id="types" aria-label="Diagrammtyp"></section>
+
+    <section class="block">
+      <div class="block-head">
+        <h2>Datenblatt</h2>
+        <div class="tools" id="tools">
+          <button type="button" data-act="addRow" title="Zeile unter der Auswahl einfügen">+ Zeile</button>
+          <button type="button" data-act="addCol" title="Spalte rechts der Auswahl einfügen">+ Spalte</button>
+          <button type="button" data-act="delRow" title="Ausgewählte Zeile löschen">− Zeile</button>
+          <button type="button" data-act="delCol" title="Ausgewählte Spalte löschen">− Spalte</button>
+          <button type="button" data-act="transpose" title="Zeilen und Spalten tauschen">⇄</button>
+          <button type="button" data-act="undo" title="Rückgängig (⌘Z)">↶</button>
+          <button type="button" data-act="import" title="Excel- oder CSV-Datei einlesen">Import</button>
+        </div>
+      </div>
+      <div class="gridwrap" id="gridwrap">
+        <table class="grid" id="grid"></table>
+      </div>
+      <p class="hint" id="hint"></p>
+    </section>
+
+    <section class="block">
+      <div class="block-head"><h2>Vorschau</h2><span class="muted small" id="previewInfo"></span></div>
+      <div class="preview" id="preview"></div>
+      <p class="warn" id="warn"></p>
+    </section>
+
+    <details class="block panel" id="decoPanel" open>
+      <summary><h2>Pfeile</h2></summary>
+      <div class="decobtns">
+        <button type="button" id="add-cagr">+ CAGR</button>
+        <button type="button" id="add-diff">+ Differenz</button>
+        <button type="button" id="add-level">+ Niveau</button>
+      </div>
+      <div id="decoList" class="decolist"></div>
+    </details>
+
+    <details class="block panel" id="optPanel">
+      <summary><h2>Darstellung</h2></summary>
+      <div id="opts" class="opts"></div>
+    </details>
+
+    <details class="block panel" id="helpPanel">
+      <summary><h2>Hilfe</h2></summary>
+      <div class="help">
+        <p><b>Daten aus Excel:</b> Bereich in Excel markieren (mit Beschriftungen), <kbd>⌘C</kbd>, hier ins graue Eckfeld oben links klicken, <kbd>⌘V</kbd>. Erste Zeile = Kategorien (z. B. Jahre), erste Spalte = Reihen.</p>
+        <p><b>Wasserfall:</b> Erste Spalte ist der Startwert. Ein <code>e</code> in einer Zelle erzeugt eine Summe (z. B. den Endwert).</p>
+        <p><b>Bearbeiten:</b> Diagramm auf der Folie anklicken, das Datenblatt lädt automatisch. Mit „Live“ wird jede Änderung sofort übernommen.</p>
+        <p><b>Größe:</b> Diagramm einfach größer ziehen, Chartwerk ordnet Beschriftungen und Pfeile danach neu an.</p>
+        <p><b>Tastatur:</b> Pfeiltasten, Enter, Tab wie in Excel. <kbd>F2</kbd> oder Doppelklick bearbeitet eine Zelle, <kbd>⇧</kbd>+Pfeile markieren mehrere Zellen.</p>
+        <p class="muted small" id="versionInfo"></p>
+      </div>
+    </details>
+  </main>
+
+  <footer class="actions" id="actions">
+    <label class="live" title="Änderungen sofort ins Diagramm übernehmen"><input type="checkbox" id="live" checked> Live</label>
+    <div class="spacer"></div>
+    <button type="button" id="btnUnbind" class="ghost" hidden title="Verknüpfung lösen, danach wird ein neues Diagramm eingefügt">Trennen</button>
+    <button type="button" id="btnCopy" class="secondary" hidden title="Als weiteres Diagramm auf der aktuellen Folie einfügen">Kopie einfügen</button>
+    <button type="button" id="btnApply" class="primary">In Folie einfügen</button>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <input type="file" id="file" accept=".xlsx,.xlsm,.xls,.csv,.tsv,.txt" hidden>
+
+  <script src="engine.js"></script>
+  <script src="icons.js"></script>
+  <script src="ppt.js"></script>
+  <script src="taskpane.js"></script>
+</body>
+</html>

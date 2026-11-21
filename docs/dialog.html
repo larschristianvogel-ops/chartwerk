@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Chartwerk</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <style>
+    body { margin: 0; font: 13px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; color: #1b1f24; display: flex; flex-direction: column; justify-content: center; min-height: 100vh; padding: 18px 20px; box-sizing: border-box; }
+    p { margin: 0 0 14px; }
+    button { align-self: flex-start; background: #1f5a96; color: #fff; border: 0; border-radius: 6px; padding: 6px 16px; font: inherit; font-weight: 600; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <p id="msg"></p>
+  <button type="button" id="ok">OK</button>
+  <script>
+    document.getElementById('msg').textContent = new URLSearchParams(location.search).get('msg') || '';
+    function closeMe() { try { Office.context.ui.messageParent('ok'); } catch (e) { window.close(); } }
+    Office.onReady(function () {
+      document.getElementById('ok').addEventListener('click', closeMe);
+      document.getElementById('ok').focus();
+      document.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === 'Escape') closeMe(); });
+    });
+  </script>
+</body>
+</html>
